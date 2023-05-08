@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -26,11 +27,12 @@ const CRUD = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useEffect(() => {
-    setData(empData);
+    axios.get("https://localhost:7279/api/Employee").then((res) => {
+      setData(res.data);
+    });
   }, []);
 
   const handleEdit = (id: any) => {
-    console.log("handle edit--", id);
     handleShow();
   };
 
@@ -40,6 +42,20 @@ const CRUD = () => {
 
   const handleDelete = (id: number) => {
     console.log("handling delete", id);
+  };
+
+  const addRecord = () => {
+    console.log("Adding record");
+    console.log(name, age, isActive);
+    axios
+      .post("https://localhost:7279/api/Employee", {
+        name,
+        age,
+        isActive,
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
   return (
     <>
@@ -73,7 +89,9 @@ const CRUD = () => {
             <label>Is Active {isActive}</label>
           </Col>
           <Col>
-            <button className="btn btn-primary">Submit</button>
+            <button className="btn btn-primary" onClick={addRecord}>
+              Submit
+            </button>
           </Col>
         </Row>
 
